@@ -47,9 +47,20 @@ function hasValidMentionCharIndex(mentionCharIndex, text, isolateChar) {
   return false;
 }
 
+function setOrGetElement(element) {
+  if (element instanceof HTMLElement) {
+    return element;
+  } else if (typeof element === 'string') {
+    return document.querySelector(element);
+  } else {
+    return null;
+  }
+}
+
 export {
   attachDataValues,
   getMentionCharIndex,
   hasValidChars,
-  hasValidMentionCharIndex
+  hasValidMentionCharIndex,
+  setOrGetElement,
 };

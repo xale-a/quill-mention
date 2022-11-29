@@ -4,7 +4,8 @@ import {
   attachDataValues,
   getMentionCharIndex,
   hasValidChars,
-  hasValidMentionCharIndex
+  hasValidMentionCharIndex,
+  setOrGetElement,
 } from "./utils";
 import "./quill.mention.css";
 import "./blots/mention";
@@ -73,7 +74,9 @@ class Mention {
     Object.assign(this.options, options, {
       dataAttributes: Array.isArray(options.dataAttributes)
         ? this.options.dataAttributes.concat(options.dataAttributes)
-        : this.options.dataAttributes
+        : this.options.dataAttributes,
+      mentionParentElement: setOrGetElement(options.mentionParentElement),
+      relativeContainer: setOrGetElement(options.relativeContainer),
     });
 
     //create mention container
