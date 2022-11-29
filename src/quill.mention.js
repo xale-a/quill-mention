@@ -73,6 +73,14 @@ class Mention {
         : this.options.dataAttributes
     });
 
+    if (options.mentionWrap instanceof HTMLElement) {
+      this.mentionWrap = options.mentionWrap;
+    }
+
+    if (options.elementContainer instanceof HTMLElement) {
+      this.elementContainer = options.elementContainer;
+    }
+
     //create mention container
     this.mentionContainer = document.createElement("div");
     this.mentionContainer.className = this.options.mentionContainerClass
@@ -187,6 +195,8 @@ class Mention {
   showMentionList() {
     if (this.options.positioningStrategy === "fixed") {
       document.body.appendChild(this.mentionContainer);
+    } else if (this.mentionWrap instanceof HTMLElement) {
+      this.mentionWrap.appendChild(this.mentionContainer);
     } else {
       this.quill.container.appendChild(this.mentionContainer);
     }
@@ -452,7 +462,7 @@ class Mention {
   containerBottomIsNotVisible(topPos, containerPos) {
     const mentionContainerBottom =
       topPos + this.mentionContainer.offsetHeight + containerPos.top;
-    return mentionContainerBottom > window.pageYOffset + window.innerHeight;
+    return mentionContainerBottom > window.innerHeight;
   }
 
   containerRightIsNotVisible(leftPos, containerPos) {
@@ -491,7 +501,10 @@ class Mention {
     const mentionCharPos = this.quill.getBounds(this.mentionCharPos);
     const containerHeight = this.mentionContainer.offsetHeight;
 
-    let topPos = this.options.offsetTop;
+    const elementContainerPos = this.elementContainer?.getBoundingClientRect() || containerPos;
+    const containerOffset = containerPos.y - elementContainerPos.y;
+
+    let topPos = this.options.offsetTop + containerOffset;
     let leftPos = this.options.offsetLeft;
 
     // handle horizontal positioning
@@ -513,14 +526,14 @@ class Mention {
     if (this.options.defaultMenuOrientation === "top") {
       // Attempt to align the mention container with the top of the quill editor
       if (this.options.fixMentionsToQuill) {
-        topPos = -1 * (containerHeight + this.options.offsetTop);
+        topPos = -1 * (containerHeight + this.options.offsetTop) + containerOffset;
       } else {
         topPos =
-          mentionCharPos.top - (containerHeight + this.options.offsetTop);
+          mentionCharPos.top - (containerHeight + this.options.offsetTop) + containerOffset;
       }
 
       // default to bottom if the top is not visible
-      if (topPos + containerPos.top <= 0) {
+      if (topPos + elementContainerPos.top <= 0) {
         let overMentionCharPos = this.options.offsetTop;
 
         if (this.options.fixMentionsToQuill) {
@@ -529,7 +542,7 @@ class Mention {
           overMentionCharPos += mentionCharPos.bottom;
         }
 
-        topPos = overMentionCharPos;
+        topPos = overMentionCharPos + containerOffset;
       }
     } else {
       // Attempt to align the mention container with the bottom of the quill editor
@@ -540,14 +553,14 @@ class Mention {
       }
 
       // default to the top if the bottom is not visible
-      if (this.containerBottomIsNotVisible(topPos, containerPos)) {
+      if (this.containerBottomIsNotVisible(topPos, elementContainerPos)) {
         let overMentionCharPos = this.options.offsetTop * -1;
 
         if (!this.options.fixMentionsToQuill) {
           overMentionCharPos += mentionCharPos.top;
         }
 
-        topPos = overMentionCharPos - containerHeight;
+        topPos = overMentionCharPos - containerHeight + containerOffset;
       }
     }
 
