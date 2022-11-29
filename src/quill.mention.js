@@ -64,7 +64,10 @@ class Mention {
       mentionContainerClass: "ql-mention-list-container",
       mentionListClass: "ql-mention-list",
       spaceAfterInsert: true,
-      selectKeys: [Keys.ENTER]
+      selectKeys: [Keys.ENTER],
+      // Custom options
+      mentionParentElement: null,
+      relativeContainer: null,
     };
 
     Object.assign(this.options, options, {
@@ -72,14 +75,6 @@ class Mention {
         ? this.options.dataAttributes.concat(options.dataAttributes)
         : this.options.dataAttributes
     });
-
-    if (options.mentionParentElement instanceof HTMLElement) {
-      this.mentionParentElement = options.mentionParentElement;
-    }
-
-    if (options.relativeContainer instanceof HTMLElement) {
-      this.relativeContainer = options.relativeContainer;
-    }
 
     //create mention container
     this.mentionContainer = document.createElement("div");
@@ -195,8 +190,8 @@ class Mention {
   showMentionList() {
     if (this.options.positioningStrategy === "fixed") {
       document.body.appendChild(this.mentionContainer);
-    } else if (this.mentionParentElement instanceof HTMLElement) {
-      this.mentionParentElement.appendChild(this.mentionContainer);
+    } else if (this.options.mentionParentElement instanceof HTMLElement) {
+      this.options.mentionParentElement.appendChild(this.mentionContainer);
     } else {
       this.quill.container.appendChild(this.mentionContainer);
     }
@@ -502,7 +497,7 @@ class Mention {
     const containerHeight = this.mentionContainer.offsetHeight;
 
     // If relative container is not set, container offset will be ignored
-    const relativeContainerPos = this.relativeContainer?.getBoundingClientRect() || containerPos;
+    const relativeContainerPos = this.options.relativeContainer?.getBoundingClientRect() || containerPos;
     const containerOffset = containerPos.y - relativeContainerPos.y;
 
     let topPos = this.options.offsetTop + containerOffset;
