@@ -73,12 +73,12 @@ class Mention {
         : this.options.dataAttributes
     });
 
-    if (options.mentionWrap instanceof HTMLElement) {
-      this.mentionWrap = options.mentionWrap;
+    if (options.mentionParentElement instanceof HTMLElement) {
+      this.mentionParentElement = options.mentionParentElement;
     }
 
-    if (options.elementContainer instanceof HTMLElement) {
-      this.elementContainer = options.elementContainer;
+    if (options.relativeContainer instanceof HTMLElement) {
+      this.relativeContainer = options.relativeContainer;
     }
 
     //create mention container
@@ -195,8 +195,8 @@ class Mention {
   showMentionList() {
     if (this.options.positioningStrategy === "fixed") {
       document.body.appendChild(this.mentionContainer);
-    } else if (this.mentionWrap instanceof HTMLElement) {
-      this.mentionWrap.appendChild(this.mentionContainer);
+    } else if (this.mentionParentElement instanceof HTMLElement) {
+      this.mentionParentElement.appendChild(this.mentionContainer);
     } else {
       this.quill.container.appendChild(this.mentionContainer);
     }
@@ -501,8 +501,9 @@ class Mention {
     const mentionCharPos = this.quill.getBounds(this.mentionCharPos);
     const containerHeight = this.mentionContainer.offsetHeight;
 
-    const elementContainerPos = this.elementContainer?.getBoundingClientRect() || containerPos;
-    const containerOffset = containerPos.y - elementContainerPos.y;
+    // If relative container is not set, container offset will be ignored
+    const relativeContainerPos = this.relativeContainer?.getBoundingClientRect() || containerPos;
+    const containerOffset = containerPos.y - relativeContainerPos.y;
 
     let topPos = this.options.offsetTop + containerOffset;
     let leftPos = this.options.offsetLeft;
@@ -533,7 +534,7 @@ class Mention {
       }
 
       // default to bottom if the top is not visible
-      if (topPos + elementContainerPos.top <= 0) {
+      if (topPos + relativeContainerPos.top <= 0) {
         let overMentionCharPos = this.options.offsetTop;
 
         if (this.options.fixMentionsToQuill) {
@@ -553,7 +554,7 @@ class Mention {
       }
 
       // default to the top if the bottom is not visible
-      if (this.containerBottomIsNotVisible(topPos, elementContainerPos)) {
+      if (this.containerBottomIsNotVisible(topPos, relativeContainerPos)) {
         let overMentionCharPos = this.options.offsetTop * -1;
 
         if (!this.options.fixMentionsToQuill) {
