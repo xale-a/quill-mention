@@ -1,3 +1,19 @@
+# Build
+
+To install dependencies run:
+```console
+npm i
+```
+
+To build Quill Mention run:
+```console
+npm run build
+```
+
+Note: Built version is also located in docs/
+
+---
+
 ![Quill Mention](docs/static/quill-mention.png "Quill Mention")
 
 # Quill Mention
