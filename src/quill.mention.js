@@ -91,7 +91,6 @@ class Mention {
     quill.root.setAttribute('aria-owns', 'quill-mention-list');
     quill.root.setAttribute('aria-controls', 'quill-mention-list');
     quill.root.setAttribute('aria-haspopup', 'true');
-    quill.root.setAttribute('aria-activedescendant', '');
     quill.root.setAttribute('role', 'combobox');
     quill.root.setAttribute('aria-expanded', 'false');
     this.mentionList.className = this.options.mentionListClass
