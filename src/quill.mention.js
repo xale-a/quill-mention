@@ -99,6 +99,7 @@ class Mention {
     quill.root.setAttribute('aria-haspopup', 'true');
     quill.root.setAttribute('aria-activedescendant', '');
     quill.root.setAttribute('role', 'combobox');
+    quill.root.setAttribute('aria-expanded', 'false');
     this.mentionList.className = this.options.mentionListClass
       ? this.options.mentionListClass
       : "";
@@ -204,6 +205,7 @@ class Mention {
       this.quill.container.appendChild(this.mentionContainer);
     }
 
+    this.quill.root.setAttribute('aria-expanded', 'true');
     this.mentionContainer.style.visibility = "hidden";
     this.mentionContainer.style.display = "";
     this.mentionContainer.scrollTop = 0;
@@ -213,6 +215,7 @@ class Mention {
 
   hideMentionList() {
     this.options.onBeforeClose();
+    this.quill.root.setAttribute('aria-expanded', 'false');
     this.mentionContainer.style.display = "none";
     this.mentionContainer.remove();
     this.setIsOpen(false);
