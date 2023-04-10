@@ -224,6 +224,7 @@ class Mention {
   highlightItem(scrollItemInView = true) {
     for (let i = 0; i < this.mentionList.childNodes.length; i += 1) {
       this.mentionList.childNodes[i].classList.remove("selected");
+      this.mentionList.childNodes[i].removeAttribute('aria-selected');
     }
 
     if (this.itemIndex === -1 || this.mentionList.childNodes[this.itemIndex].dataset.disabled === "true") {
@@ -231,6 +232,7 @@ class Mention {
     }
 
     this.mentionList.childNodes[this.itemIndex].classList.add("selected");
+    this.mentionList.childNodes[this.itemIndex].setAttribute('aria-selected', 'true');
     this.quill.root.setAttribute('aria-activedescendant', this.mentionList.childNodes[this.itemIndex].id);
 
     if (scrollItemInView) {
