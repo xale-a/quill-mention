@@ -93,7 +93,12 @@ class Mention {
 
     this.mentionList = document.createElement("ul");
     this.mentionList.id = 'quill-mention-list';
+    this.mentionList.setAttribute('role', 'listbox');
     quill.root.setAttribute('aria-owns', 'quill-mention-list');
+    quill.root.setAttribute('aria-controls', 'quill-mention-list');
+    quill.root.setAttribute('aria-haspopup', 'true');
+    quill.root.setAttribute('aria-activedescendant', '');
+    quill.root.setAttribute('role', 'combobox');
     this.mentionList.className = this.options.mentionListClass
       ? this.options.mentionListClass
       : "";
